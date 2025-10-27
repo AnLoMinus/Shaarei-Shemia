@@ -1,0 +1,46 @@
+# JekFlow - מערכת מאמרים אוטומטית ל"שערי שמיעה"
+title: "שערי שמיעה"
+description: "מאגר תורני מקיף לדיני כעונה שומע והלכות שמיעה"
+baseurl: "/shaarei-shemia"
+url: "https://anlominus.github.io"
+timezone: "Asia/Jerusalem"
+markdown: kramdown
+theme: minima
+
+# הגדרות Collections למאמרים
+collections:
+  articles:
+    output: true
+    permalink: /articles/:title/
+    sort_by: date
+    sort_order: reverse
+
+# ברירות מחדל למאמרים
+defaults:
+  - scope:
+      path: ""
+      type: "articles"
+    values:
+      layout: "article"
+      author: "מחבר שערי שמיעה"
+      tags: []
+      category: "הלכה"
+      lang: "he"
+
+# הגדרות נוספות
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor/
+
+# תוספים מומלצים
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# הגדרות SEO
+seo:
+  type: "WebSite"
+  locale: "he_IL"

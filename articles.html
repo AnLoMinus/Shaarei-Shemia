@@ -1,0 +1,96 @@
+---
+layout: default
+title: "כל המאמרים"
+permalink: /articles/
+---
+<div class="articles-page">
+    <header class="page-header">
+        <h1>כל המאמרים</h1>
+        <p>מאגר מקיף של מאמרים תורניים בנושא דיני כעונה שומע</p>
+    </header>
+
+    <div class="articles-filters">
+        <div class="filter-group">
+            <label for="category-filter">קטגוריה:</label>
+            <select id="category-filter">
+                <option value="">כל הקטגוריות</option>
+                {% assign categories = site.articles | map: 'category' | uniq | compact %}
+                {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="search-input">חיפוש:</label>
+            <input type="text" id="search-input" placeholder="חפש במאמרים...">
+        </div>
+    </div>
+
+    <div class="articles-list">
+        {% assign sorted_articles = site.articles | sort: "date" | reverse %}
+        {% for article in sorted_articles %}
+        <article class="article-item" data-category="{{ article.category | default: '' }}"
+            data-title="{{ article.title | downcase }}">
+            <div class="article-header">
+                <h2><a href="{{ article.url | relative_url }}">{{ article.title }}</a></h2>
+                <div class="article-meta">
+                    <time>{{ article.date | date: "%d/%m/%Y" }}</time>
+                    {% if article.author %} • {{ article.author }}{% endif %}
+                    {% if article.category %} • <span class="category">{{ article.category }}</span>{% endif %}
+                </div>
+            </div>
+
+            {% if article.excerpt %}
+            <div class="article-excerpt">
+                {{ article.excerpt }}
+            </div>
+            {% endif %}
+
+            {% if article.tags and article.tags.size > 0 %}
+            <div class="article-tags">
+                {% for tag in article.tags %}
+                <span class="tag">#{{ tag }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+
+    {% if sorted_articles.size == 0 %}
+    <div class="no-articles">
+        <p>אין מאמרים זמינים כרגע.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // פילטרים דינמיים
+    document.addEventListener('DOMContentLoaded', function () {
+        const categoryFilter = document.getElementById('category-filter');
+        const searchInput = document.getElementById('search-input');
+        const articles = document.querySelectorAll('.article-item');
+
+        function filterArticles() {
+            const selectedCategory = categoryFilter.value;
+            const searchTerm = searchInput.value.toLowerCase();
+
+            articles.forEach(article => {
+                const articleCategory = article.dataset.category;
+                const articleTitle = article.dataset.title;
+
+                const categoryMatch = !selectedCategory || articleCategory === selectedCategory;
+                const searchMatch = !searchTerm || articleTitle.includes(searchTerm);
+
+                if (categoryMatch && searchMatch) {
+                    article.style.display = 'block';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+        }
+
+        categoryFilter.addEventListener('change', filterArticles);
+        searchInput.addEventListener('input', filterArticles);
+    });
+</script>

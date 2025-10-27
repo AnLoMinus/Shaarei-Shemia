@@ -1,0 +1,59 @@
+---
+layout: default
+title: "שערי שמיעה - מאגר תורני לדיני כעונה שומע"
+---
+<div class="home">
+    <div class="hero-section">
+        <h1 class="site-title">שערי שמיעה</h1>
+        <p class="site-description">{{ site.description }}</p>
+        <div class="hero-actions">
+            <a href="{{ '/articles/' | relative_url }}" class="btn btn-primary">עיין במאמרים</a>
+            <a href="{{ '/about/' | relative_url }}" class="btn btn-secondary">אודות המאגר</a>
+        </div>
+    </div>
+
+    <div class="recent-articles">
+        <h2>מאמרים אחרונים</h2>
+        <div class="articles-grid">
+            {% assign recent_articles = site.articles | sort: "date" | reverse | limit: 6 %}
+            {% for article in recent_articles %}
+            <div class="article-card">
+                <h3><a href="{{ article.url | relative_url }}">{{ article.title }}</a></h3>
+                <p class="article-meta">
+                    {{ article.date | date: "%d/%m/%Y" }}
+                    {% if article.category %} • {{ article.category }}{% endif %}
+                </p>
+                {% if article.excerpt %}
+                <p class="article-excerpt">{{ article.excerpt | truncate: 150 }}</p>
+                {% endif %}
+                {% if article.tags and article.tags.size > 0 %}
+                <div class="article-tags">
+                    {% for tag in article.tags limit: 3 %}
+                    <span class="tag">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="view-all">
+            <a href="{{ '/articles/' | relative_url }}" class="btn btn-outline">צפה בכל המאמרים</a>
+        </div>
+    </div>
+
+    <div class="categories-section">
+        <h2>קטגוריות</h2>
+        <div class="categories-grid">
+            {% assign categories = site.articles | map: 'category' | uniq | compact %}
+            {% for category in categories %}
+            <div class="category-card">
+                <h3>{{ category }}</h3>
+                {% assign category_articles = site.articles | where: 'category', category %}
+                <p>{{ category_articles.size }} מאמרים</p>
+                <a href="{{ '/categories/' | append: category | downcase | relative_url }}"
+                    class="btn btn-small">עיין</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
